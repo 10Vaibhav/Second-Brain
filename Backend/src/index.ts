@@ -32,18 +32,6 @@ app.post("/api/v1/signup", async (req: Request, res: Response) => {
 
     try{
 
-        const Name = updateBody.username;
-
-        const existingUser = await UserModel.findOne({Name});
-
-        if(existingUser){
-            res.status(409).json({
-                message: "User already exist !!"
-            });
-
-            return;
-        }
-
         const saltRounds = 10;
 
         const hashedPassword = await bcrypt.hash(updateBody.password, saltRounds);
