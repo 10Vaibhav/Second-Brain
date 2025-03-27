@@ -66,7 +66,7 @@ app.post("/api/v1/signin", async (req: Request, res: Response) => {
 
         if(!success){
             res.status(411).json({
-                message: "something wrong in SignUp Route!!",
+                message: "something wrong in SignIn Route!!",
             })
 
             return;
