@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 
 type variants = "primary" | "secondary";
 
@@ -6,8 +7,8 @@ export interface ButtonProps {
     variant: variants;
     size: "sm" | "md" | "lg";
     text: string;
-    startIcon?: any;
-    endIcon?: any;
+    startIcon?: ReactElement;
+    endIcon?: ReactElement;
     onClick?: ()=> void;
 }
 
@@ -17,12 +18,12 @@ const variantStyles = {
 }
 
 const sizeStyles = {
-    "sm": "p-2",
-    "md": "p-4",
-    "lg": "p-6"
+    "sm": "p-2 text-sm",
+    "md": "p-4 text-md",
+    "lg": "p-6 text-lg"
 }
 
 export const Button = (props: ButtonProps) => {
 
-    return <button className={`${variantStyles[props.variant]} ${sizeStyles[props.size]} m-2 rounded-md w-[160px] cursor-pointer hover:scale-105 flex justify-center items-center`}>{props.startIcon ? <div className="pr-2">{props.startIcon}</div>: null} {props.text}</button>
+    return <button className={`${variantStyles[props.variant]} ${sizeStyles[props.size]} m-2 rounded-md ${props.size === "lg"? "w-auto": "w-[160px]"} cursor-pointer hover:scale-105 flex justify-center items-center`}>{props.startIcon ? <div className="pr-2">{props.startIcon}</div>: null} {props.text}</button>
 }
