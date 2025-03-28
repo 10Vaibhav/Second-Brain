@@ -2,11 +2,12 @@ import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import {z} from "zod";
-import { UserModel, ContentModel } from "./db";
+import { UserModel, ContentModel, LinkModel } from "./db";
 import bcrypt from "bcrypt";
 import { JWT_Password } from "./config";
 import { userMiddleWare } from "./middleware";
 import { ObjectType } from "typescript";
+import { random } from "./utils";
 
 
 const pass: string = JWT_Password
@@ -162,8 +163,23 @@ app.delete("/api/v1/content",userMiddleWare,async (req: Request, res: Response) 
 
 });
 
-app.post("/api/v1/brain/share", (req,res) => {
+app.post("/api/v1/brain/share", userMiddleWare,(req: Request,res: Response) => {
+    const share = req.body.share;
 
+    if(share){
+        LinkModel.create({
+            userId: req.userId,
+            hash: random(10)
+        })
+    }else{
+        LinkModel.deleteOne({
+            userId: req.userId
+        });
+    }
+
+    res.json({
+        message: "Updated Sharable Link!!"
+    })
 });
 
 app.get("/api/v1/brain/:shareLink", (req, res)=> {
