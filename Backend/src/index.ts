@@ -52,7 +52,7 @@ app.post("/api/v1/signup", async (req: Request, res: Response) => {
 
     }catch(error){
         res.status(409).json({
-            message : `Error Occurred in SignUp EndPoint : ${error}`
+            message : `user already exist`
         })
     }
 
@@ -163,27 +163,91 @@ app.delete("/api/v1/content",userMiddleWare,async (req: Request, res: Response) 
 
 });
 
-app.post("/api/v1/brain/share", userMiddleWare,(req: Request,res: Response) => {
+app.post("/api/v1/brain/share", userMiddleWare,async (req: Request,res: Response) => {
+    try{
+
     const share = req.body.share;
 
     if(share){
-        LinkModel.create({
+
+        const existingLink = await LinkModel.findOne({
             userId: req.userId,
-            hash: random(10)
-        })
+        });
+
+        if(existingLink){
+            res.json({
+                hash: existingLink.hash,
+            })
+            return;
+        }
+
+        const hash = random(10)
+        await LinkModel.create({
+            userId: req.userId,
+            hash: hash,
+        });
+
+        res.json({
+            message: "/share/"+hash,
+        });
+
     }else{
-        LinkModel.deleteOne({
+        await LinkModel.deleteOne({
             userId: req.userId
+        });
+
+        res.json({
+            message: "Remove Link"
         });
     }
 
-    res.json({
-        message: "Updated Sharable Link!!"
-    })
+    }catch (error){
+        console.log("error Occurred at Share end Point: ", error);
+    }
 });
 
-app.get("/api/v1/brain/:shareLink", (req, res)=> {
+app.get("/api/v1/brain/:shareLink",async (req: Request, res: Response)=> {
 
+    try{
+
+        const hash: string = String(req.params.shareLink);
+
+        const link = await LinkModel.findOne({
+            hash
+        })
+
+        if(!link){
+            res.status(411).json({
+                message: "Sorry Incorrect Input!!"
+            });
+
+            return;
+        }
+
+        const content = await ContentModel.find({
+            userId: link.userId,
+        });
+
+        const user = await UserModel.findOne({
+                _id: link.userId
+        });
+
+        if(!user){
+            res.status(411).json({
+                message: "user not found, error should ideally not happened!!"
+            });
+
+            return;
+        }
+
+        res.json({
+            username: user.username,
+            content: content
+        });
+
+    }catch(error){
+        console.log("Error Occurred while getting the link: ", error);
+    }
 });
 
 async function main() {
