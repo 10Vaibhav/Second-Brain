@@ -10,6 +10,8 @@ export interface ButtonProps {
     startIcon?: ReactElement;
     endIcon?: ReactElement;
     onClick?: ()=> void;
+    fullWidth?: boolean;
+    loading?:boolean;
 }
 
 const variantStyles = {
@@ -25,5 +27,7 @@ const sizeStyles = {
 
 export const Button = (props: ButtonProps) => {
 
-    return <button onClick={props.onClick} className={`${variantStyles[props.variant]} ${sizeStyles[props.size]} m-2 rounded-md ${props.size === "lg"? "w-auto": "w-[140px]"} cursor-pointer hover:scale-105 flex justify-center items-center`}>{props.startIcon ? <div className="pr-2">{props.startIcon}</div>: null} {props.text}</button>
+    return <button onClick={props.onClick} className={`${variantStyles[props.variant]} ${sizeStyles[props.size]} m-2 rounded-md ${props.size === "lg"? "w-auto": "w-[140px]"} cursor-pointer hover:scale-105 flex justify-center items-center ${props.fullWidth ? "w-full flex justify-center items-center": ""} ${props.loading? "opacity-45 ": ""}`} disabled={props.loading}>
+        {props.startIcon ? <div className="pr-2">{props.startIcon}</div>: null} {props.text}
+    </button>
 }

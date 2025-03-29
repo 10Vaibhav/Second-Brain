@@ -3,6 +3,7 @@ import { CrossIcon } from "../icons/Crossicon"
 import { Button } from "./Button"
 import { useRef} from "react";
 import useOutsideClick from "./Custom_useOutSideClickHook"
+import { Input } from "./Input";
 
 interface CreateContentModalProps {
     open: boolean;
@@ -38,14 +39,3 @@ export function CreateContentModal({open, onClose}: CreateContentModalProps){
 
 }
 
-interface InputProps{
-    onChange: () => void;
-    placeholder?: string;
-}
-
-function Input({onChange, placeholder}:InputProps ){
-
-    return <div>
-        <input placeholder={placeholder} type={"text"} className="px-4 py-2 border rounded m-2 border-slate-300" onChange={onChange}/>
-    </div>
-}
