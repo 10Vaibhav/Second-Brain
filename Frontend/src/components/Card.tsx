@@ -19,10 +19,11 @@ export function Card({title, link, type}: CardProps){
                 </div>
 
                 <div className="flex justify-center items-center">
-                    <div className="pr-2 text-gray-500">
-                        <a href={link.replace("x.com", "twitter.com")} target="_blank"></a>
-                        <ShareIcon/>
-                    </div>
+                        <a href={link.replace("x.com", "twitter.com")} target="_blank">
+                        <div className="pr-2 text-gray-500">
+                            <ShareIcon/>
+                        </div>
+                        </a>
                     <div className="text-gray-500">
                         <ShareIcon/>
                     </div>
