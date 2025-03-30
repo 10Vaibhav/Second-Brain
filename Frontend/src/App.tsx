@@ -1,11 +1,19 @@
 import './App.css'
 import { Dashboard } from './pages/dashboard'
-import { Signup } from './pages/Singup'
+import { Signup } from './pages/signup'
 import { SignIn } from './pages/Signin'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 function App() {
 
-  return <Dashboard/>
+    return <BrowserRouter>
+      <Routes>
+      <Route path='/' element={<Navigate to='/signup' />} />
+        <Route path='/signup' element={<Signup/>}/>
+        <Route path='/signin' element={<SignIn/>}/>
+        <Route path='/dashboard' element={<Dashboard/>}/>
+      </Routes>
+    </BrowserRouter>
 
 }
 

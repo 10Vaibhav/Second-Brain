@@ -8,6 +8,7 @@ import { JWT_Password } from "./config";
 import { userMiddleWare } from "./middleware";
 import { ObjectType } from "typescript";
 import { random } from "./utils";
+import cors from "cors";
 
 
 const pass: string = JWT_Password
@@ -15,6 +16,7 @@ const pass: string = JWT_Password
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 const userSchema = z.object({
     username: z.string().min(1,{message: "Name cannot be empty"}),
@@ -60,18 +62,10 @@ app.post("/api/v1/signup", async (req: Request, res: Response) => {
 
 app.post("/api/v1/signin", async (req: Request, res: Response) => {
 
-    const {success} = userSchema.safeParse(req.body);
     const updateBody: FinalUserSchema = req.body;
 
     try{
 
-        if(!success){
-            res.status(411).json({
-                message: "something wrong in SignIn Route!!",
-            })
-
-            return;
-        }
 
     const username = updateBody.username;
 
@@ -114,10 +108,12 @@ app.post("/api/v1/content",userMiddleWare,async (req: Request, res: Response) =>
 
     const link = req.body.link;
     const title = req.body.title;
+    const type = req.body.type;
 
     await ContentModel.create({
         link,
         title,
+        type,
         userId: req.userId,
         tags: []
     })
