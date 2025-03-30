@@ -38,6 +38,8 @@ export function CreateContentModal({open, onClose}: CreateContentModalProps){
             }
         });
 
+        onClose();
+
     }
 
     const ref = useRef<HTMLDivElement>(null);
