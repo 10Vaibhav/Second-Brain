@@ -61,23 +61,23 @@ export function SignIn() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 to-gray-100 flex justify-center items-center p-4">
-      <div className="bg-white border border-gray-200 shadow-lg rounded-xl p-6 md:p-8 w-full max-w-md transition-all duration-300 hover:shadow-xl">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+      <div className="bg-white border border-gray-200 shadow-lg rounded-xl p-4 md:p-6 lg:p-8 w-full max-w-xs md:max-w-md transition-all duration-300 hover:shadow-xl">
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4 md:mb-6 text-center">
           Sign In to Your Account
         </h2>
 
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           <Input reference={usernameRef} placeholder={"Username"} />
           <Input reference={passwordRef} placeholder={"Password"} />
         </div>
 
         {errorMsg && (
-          <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-sm">
+          <div className="mt-3 md:mt-4 p-2 md:p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-xs md:text-sm">
             {errorMsg}
           </div>
         )}
 
-        <div className="mt-6">
+        <div className="mt-4 md:mt-6">
           <Button
             onClick={signIn}
             fullWidth={true}
@@ -88,8 +88,8 @@ export function SignIn() {
           />
         </div>
 
-        <div className="mt-4 text-center">
-          <p className="text-gray-600">
+        <div className="mt-3 md:mt-4 text-center">
+          <p className="text-sm md:text-base text-gray-600">
             Don't have an account?{" "}
             <Link
               to="/signup"

@@ -5,7 +5,7 @@ interface InputProps{
 
 export function Input({placeholder, reference}:InputProps ){
 
-    return <div>
-        <input ref={reference} placeholder={placeholder} type={"text"} className="px-4 py-2 border rounded m-2 border-slate-300"/>
+    return <div className="w-full">
+        <input ref={reference} placeholder={placeholder} type={"text"} className="w-full px-3 py-2 md:px-4 md:py-2 border rounded m-1 md:m-2 border-slate-300 text-sm md:text-base"/>
     </div>
 }

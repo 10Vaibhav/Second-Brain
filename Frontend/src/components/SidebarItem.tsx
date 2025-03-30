@@ -1,20 +1,20 @@
-import { ReactElement } from "react";
+import React from "react";
 
-
-export function SidebarItem({text, icon}: {
+type SidebarItemProps = {
     text: string;
-    icon: ReactElement;
-}){
-
-    return <div className="flex  text-gray-700 py-2 cursor-pointer hover:bg-gray-200 rounded max-w-48 pl-4 transition-all duration-1000">
-        <div className="pr-2">
-            {icon}
-        </div>
-
-        <div>
-            {text}
-        </div>
-    </div>
+    icon: React.ReactNode;
+    active?: boolean;
 }
 
-
+export function SidebarItem({ text, icon, active = false }: SidebarItemProps) {
+    return (
+        <div className={`flex items-center p-2 my-1 md:my-2 rounded-md cursor-pointer hover:bg-purple-100 ${active ? 'bg-purple-100 text-purple-700 font-medium' : ''}`}>
+            <div className="mr-2 md:mr-3">
+                {icon}
+            </div>
+            <div className="text-sm md:text-base">
+                {text}
+            </div>
+        </div>
+    );
+}
