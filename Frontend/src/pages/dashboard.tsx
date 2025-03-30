@@ -26,28 +26,28 @@ export function Dashboard() {
     : contents;
 
   // Helper function to ensure type is either "twitter" or "youtube"
-  const getValidType = (type: string): "twitter" | "youtube" => {
-    return type.toLowerCase() === "youtube" ? "youtube" : "twitter";
-  };
-
+  const getValidType = (type: string): "twitter" | "youtube"| "instagram" => {
+    return type.toLowerCase() === "youtube" ? "youtube" :
+    type.toLowerCase() === "instagram" ? "instagram" :"twitter";
+  }
   return <div>
     <Sidebar 
       activeFilter={activeFilter} 
       onFilterChange={setActiveFilter}
     />
-    
+
     <div className='p-3 md:p-4 md:ml-72 min-h-screen bg-[#eeeeef]'>
       <CreateContentModal open={modalOpen} onClose={() => {
         setModalOpen(false);
       }}/>
-      
+
       <div className='flex flex-col md:flex-row md:justify-between m-1 md:m-2 items-start md:items-center gap-3 md:gap-0'>
         <div className='mt-12 md:mt-0'>
           <h1 className='text-purple-950 font-semibold text-xl md:text-2xl'>
             {activeFilter ? `${activeFilter.charAt(0).toUpperCase() + activeFilter.slice(1)} Contents` : 'All Contents'}
           </h1>
         </div>
-        
+
         <div className='flex flex-col md:flex-row justify-start md:justify-end w-full md:w-auto gap-2 md:gap-4'>
           <Button 
             onClick={async () => {
@@ -105,6 +105,7 @@ export function Dashboard() {
                 type={getValidType(content.type)} 
                 link={content.link || ""}
                 title={content.title || ""}
+                contentId={content._id}
               />
             </div>
           ))
