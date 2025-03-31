@@ -2,10 +2,6 @@
 
 A full-stack web application that helps users organize and manage content from various platforms in one centralized dashboard.
 
-## Demo Video
-
-[Watch the demo video](./SecondBrainDemo.mp4)
-
 ## Features
 
 - **User Authentication**: Secure signup and login functionality with JWT
