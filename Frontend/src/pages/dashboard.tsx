@@ -25,7 +25,6 @@ export function Dashboard() {
         content.type.toLowerCase() === activeFilter.toLowerCase())
     : contents;
 
-  // Helper function to ensure type is either "twitter" or "youtube"
   const getValidType = (type: string): "twitter" | "youtube"| "instagram" => {
     return type.toLowerCase() === "youtube" ? "youtube" :
     type.toLowerCase() === "instagram" ? "instagram" :"twitter";
@@ -106,6 +105,7 @@ export function Dashboard() {
                 link={content.link || ""}
                 title={content.title || ""}
                 contentId={content._id}
+                onDelete={() => refresh()}
               />
             </div>
           ))

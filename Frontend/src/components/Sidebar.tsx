@@ -21,7 +21,6 @@ export function Sidebar({ activeFilter, onFilterChange }: SidebarProps) {
         } else {
             onFilterChange(filter);
         }
-        // Close sidebar on mobile after selection
         if (window.innerWidth < 768) {
             setIsOpen(false);
         }
@@ -88,10 +87,10 @@ export function Sidebar({ activeFilter, onFilterChange }: SidebarProps) {
                     />
                 </div>
             </div>
-            
+
             {/* Overlay to close sidebar on mobile */}
             {isOpen && (
-                <div 
+                <div
                     className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-0"
                     onClick={() => setIsOpen(false)}
                 />

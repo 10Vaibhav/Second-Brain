@@ -148,14 +148,20 @@ app.delete("/api/v1/content",userMiddleWare,async (req: Request, res: Response) 
 
     const contentId = req.body.contentId;
 
-    await ContentModel.deleteMany({
-        contentId,
-        userId: req.userId
-    })
+    try{
+        const result = await ContentModel.deleteOne({
+            _id: contentId,
+            userId: req.userId
+        });
 
-    res.json({
-        message: "Deleted"
-    })
+        res.json({
+            message: "Deleted"
+        })
+    }catch(error){
+        res.status(500).json({
+            message: "server error while deleting content"
+        })
+    }
 
 });
 

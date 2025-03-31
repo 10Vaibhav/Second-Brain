@@ -6,35 +6,53 @@ import { YoutubeIcon } from "../icons/YoutubeIcon";
 import { BACKEND_URL } from "../config";
 import { useState } from "react";
 import { InstaIcon } from "../icons/InstaIcon";
+import { useEffect } from "react";
+
+// Add this to handle TypeScript typings for the Instagram embed API
+declare global {
+  interface Window {
+    instgrm?: {
+      Embeds: {
+        process: () => void;
+      };
+    };
+  }
+}
 
 interface CardProps {
   title: string;
   link: string;
   type: "twitter" | "youtube" | "instagram";
-  contentId: string; // Add contentId prop
-  onDelete?: (id: string) => void; // Optional callback for parent component updates
+  contentId: string; 
+  onDelete?: (id: string) => void; 
 }
 
 export function Card({ title, link, type, contentId, onDelete }: CardProps) {
   const [deleting, setDeleting] = useState<boolean>(false);
 
+  // Add this effect to process Instagram embeds after rendering
+  useEffect(() => {
+    if (type === "instagram" && window.instgrm) {
+      setTimeout(() => {
+        window.instgrm?.Embeds?.process?.();
+      }, 100);
+    }
+  }, [type]);
+
   async function deleteHandler() {
     try {
       setDeleting(true);
-      
-      // Delete the specific content using the provided contentId
+
       await axios.delete(`${BACKEND_URL}/api/v1/content`, {
         headers: {
           authorization: localStorage.getItem("token"),
         },
         data: { contentId },
       });
-      
-      // Notify parent component if needed
+
       if (onDelete) {
         onDelete(contentId);
       }
-      
     } catch (error) {
       console.error("Error deleting content:", error);
     } finally {
@@ -104,6 +122,17 @@ export function Card({ title, link, type, contentId, onDelete }: CardProps) {
                 data-instgrm-captioned
                 data-instgrm-permalink={link}
                 data-instgrm-version="14"
+                style={{
+                  background: "#FFF",
+                  border: "0",
+                  borderRadius: "3px",
+                  boxShadow: "0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)",
+                  margin: "1px",
+                  maxWidth: "540px",
+                  minWidth: "326px",
+                  padding: "0",
+                  width: "99.375%"
+                }}
               >
                 <a href={link}></a>
               </blockquote>
