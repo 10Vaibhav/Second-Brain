@@ -1,6 +1,6 @@
 import { CrossIcon } from "../icons/Crossicon";
 import { Button } from "./Button";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import useOutsideClick from "./Custom_useOutSideClickHook";
 import { Input } from "./Input";
 import { BACKEND_URL } from "../config";
@@ -21,15 +21,66 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
   const titleRef = useRef<HTMLInputElement>(null);
   const linkRef = useRef<HTMLInputElement>(null);
   const [type, setType] = useState(ContentType.Youtube);
+  const [link, setLink] = useState("");
+
+  const detectContentType = (url: string): ContentType => {
+    const lowerCaseUrl = url.toLowerCase();
+    
+    if (lowerCaseUrl.includes("youtube.com") || lowerCaseUrl.includes("youtu.be")) {
+      return ContentType.Youtube;
+    } else if (lowerCaseUrl.includes("twitter.com") || lowerCaseUrl.includes("x.com")) {
+      return ContentType.Twitter;
+    } else if (lowerCaseUrl.includes("instagram.com")) {
+      return ContentType.Instagram;
+    }
+    
+    // Default to YouTube if no match
+    return ContentType.Youtube;
+  };
+
+  // Update content type whenever link changes
+  useEffect(() => {
+    if (open && linkRef.current) {
+      linkRef.current.addEventListener('input', handleLinkChange);
+      
+      // Clean up event listener on unmount or modal close
+      return () => {
+        if (linkRef.current) {
+          linkRef.current.removeEventListener('input', handleLinkChange);
+        }
+      };
+    }
+  }, [open]);
+
+  // Detect content type when link changes
+  useEffect(() => {
+    if (link) {
+      const detectedType = detectContentType(link);
+      setType(detectedType);
+    }
+  }, [link]);
+
+  // Handle link input change
+  const handleLinkChange = () => {
+    if (linkRef.current) {
+      const currentLink = linkRef.current.value || "";
+      setLink(currentLink);
+    }
+  };
+
+  // Handle manual content type selection
+  const handleTypeChange = (selectedType: ContentType) => {
+    setType(selectedType);
+  };
 
   async function addContent() {
     const title = titleRef.current?.value;
-    const link = linkRef.current?.value;
+    const currentLink = linkRef.current?.value;
 
     await axios.post(
       `${BACKEND_URL}/api/v1/content`,
       {
-        link,
+        link: currentLink,
         title,
         type,
       },
@@ -65,12 +116,15 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
                 </div>
                 <div className="space-y-2 md:space-y-3">
                   <Input reference={titleRef} placeholder={"Title"} />
-                  <Input reference={linkRef} placeholder={"Link"} />
+                  <Input 
+                    reference={linkRef} 
+                    placeholder={"Link"} 
+                  />
                 </div>
 
                 <div className="mt-3 md:mt-4">
                   <h1 className="text-sm md:text-base font-medium ml-1">
-                    Type
+                    Detected Content Type
                   </h1>
                   <div className="flex gap-2 p-2 md:p-4 justify-center">
                     <Button
@@ -79,9 +133,7 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
                         type === ContentType.Youtube ? "primary" : "secondary"
                       }
                       size="sm"
-                      onClick={() => {
-                        setType(ContentType.Youtube);
-                      }}
+                      onClick={() => handleTypeChange(ContentType.Youtube)}
                     />
 
                     <Button
@@ -90,20 +142,16 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
                         type === ContentType.Twitter ? "primary" : "secondary"
                       }
                       size="sm"
-                      onClick={() => {
-                        setType(ContentType.Twitter);
-                      }}
+                      onClick={() => handleTypeChange(ContentType.Twitter)}
                     />
 
                     <Button
                       text="Instagram"
                       variant={
-                        type === ContentType.Instagram? "primary" : "secondary"
+                        type === ContentType.Instagram ? "primary" : "secondary"
                       }
                       size="sm"
-                      onClick={() => {
-                        setType(ContentType.Instagram);
-                      }}
+                      onClick={() => handleTypeChange(ContentType.Instagram)}
                     />
                   </div>
                 </div>
