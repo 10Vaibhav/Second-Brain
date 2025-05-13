@@ -15,22 +15,26 @@ A full-stack web application that helps users organize and manage content from v
 ### Authentication Pages
 
 #### Signup Page
-![Signup Page](./OutputImages/SignUp.png)
+![Signup Page](./OutputImages/Create%20Account.png)
 *Create a new account with username and password*
 
 #### Login Page
-![Login Page](./OutputImages/SignIN.png)
+![Login Page](./OutputImages/SignIn.png)
 *Sign in to your existing account*
 
 ### Content Management
 
+#### All Contents Dashboard
+![All Contents](./OutputImages/dashboard_new.png)
+*View all your saved content across platforms*
+
 #### Filter Contents View
-![Twitter Contents](./OutputImages/Filtered%20Content.png)
+![Twitter Contents](./OutputImages/Filtered%20Content%20.png)
 *Filter and view Twitter-specific content*
 
-#### All Contents Dashboard
-![All Contents](./OutputImages/Dashboard.png)
-*View all your saved content across platforms*
+#### Share Content
+![Add Content Modal](./OutputImages/share%20button%20option.png)
+*Share the generated content via whatsapp, messenger, twitter, linkedin*
 
 #### Adding New Content
 ![Add Content Modal](./OutputImages/AddContent.png)
