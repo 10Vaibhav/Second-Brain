@@ -19,7 +19,7 @@ A full-stack web application that helps users organize and manage content from v
 *Create a new account with username and password*
 
 #### Login Page
-![Login Page](./OutputImages/SignIn.png)
+![Login Page](./OutputImages/Sign%20In.png)
 *Sign in to your existing account*
 
 ### Content Management
