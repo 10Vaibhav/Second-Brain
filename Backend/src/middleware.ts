@@ -21,7 +21,7 @@ export const userMiddleWare = (req: Request, res: Response, next: NextFunction)=
 
         const decode = jwt.verify(token, password) as { id: string | number };
 
-        if (decode) {
+        if (decode.id) {
           req.userId = decode.id;
           next();
         } else {
