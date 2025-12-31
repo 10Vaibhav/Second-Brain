@@ -21,4 +21,4 @@ pm2 start serve --name brainly-frontend -- -s dist -l 3000
 
 pm2 save
 
-echo "Deployment completed! App is running with PM2. okay"
+echo "Deployment completed! App is running with PM2. okay bye."
