@@ -30,7 +30,6 @@ interface CardProps {
 export function Card({ title, link, contentId, onDelete, type: providedType }: CardProps) {
   const [deleting, setDeleting] = useState<boolean>(false);
   const [contentType, setContentType] = useState<ContentType>(providedType || "unknown");
-  const [isHovered, setIsHovered] = useState<boolean>(false);
 
   useEffect(() => {
     if (providedType) {
@@ -86,30 +85,30 @@ export function Card({ title, link, contentId, onDelete, type: providedType }: C
       case "youtube":
         return { 
           icon: <YoutubeIcon />, 
-          bgColor: "rgba(191, 9, 47, 0.1)", 
+          bgColor: "rgba(191, 9, 47, 0.08)", 
           textColor: "#BF092F",
-          borderColor: "#BF092F"
+          borderColor: "rgba(191, 9, 47, 0.2)"
         };
       case "twitter":
         return { 
           icon: <TwitterIcon />, 
-          bgColor: "rgba(22, 71, 106, 0.1)", 
+          bgColor: "rgba(22, 71, 106, 0.08)", 
           textColor: "#16476A",
-          borderColor: "#16476A"
+          borderColor: "rgba(22, 71, 106, 0.2)"
         };
       case "instagram":
         return { 
           icon: <InstaIcon />, 
-          bgColor: "rgba(59, 151, 151, 0.1)", 
+          bgColor: "rgba(59, 151, 151, 0.08)", 
           textColor: "#3B9797",
-          borderColor: "#3B9797"
+          borderColor: "rgba(59, 151, 151, 0.2)"
         };
       default:
         return { 
           icon: null, 
-          bgColor: "rgba(19, 36, 64, 0.1)", 
+          bgColor: "rgba(19, 36, 64, 0.08)", 
           textColor: "#132440",
-          borderColor: "#132440"
+          borderColor: "rgba(19, 36, 64, 0.2)"
         };
     }
   };
@@ -131,41 +130,29 @@ export function Card({ title, link, contentId, onDelete, type: providedType }: C
   const { icon, bgColor, textColor, borderColor } = getIconAndColor();
 
   return (
-    <div className="w-full">
-      <div 
-        className={`glass-effect rounded-2xl p-5 w-full min-h-[300px] flex flex-col transition-all duration-300 card-hover ${
-          isHovered ? "shadow-2xl" : "shadow-lg"
-        }`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        style={{
-          border: `1px solid ${isHovered ? borderColor : 'rgba(255, 255, 255, 0.2)'}`,
-          borderWidth: isHovered ? '2px' : '1px'
-        }}
-      >
-        <div className="flex justify-between items-center mb-4">
+    <div className="w-full animate-subtle-fade-in">
+      <div className="premium-card p-4 sm:p-5 w-full min-h-[280px] sm:min-h-[300px] flex flex-col">
+        {/* Header */}
+        <div className="flex justify-between items-start mb-4 gap-3">
           <div 
-            className="px-3 py-2 rounded-xl flex items-center text-sm font-semibold"
+            className="px-3 py-1.5 rounded-lg flex items-center text-xs sm:text-sm font-medium flex-shrink-0"
             style={{
               backgroundColor: bgColor,
               color: textColor,
-              border: `1px solid ${borderColor}20`
+              border: `1px solid ${borderColor}`
             }}
           >
-            <div className="mr-2">
-              {icon}
-            </div>
-            <span>{contentType.charAt(0).toUpperCase() + contentType.slice(1)}</span>
+            {icon && <div className="mr-1.5 flex-shrink-0">{icon}</div>}
+            <span className="capitalize">{contentType}</span>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 flex-shrink-0">
             <ShareButton text={getShareText()} />
             
             <button
               onClick={deleteHandler}
-              className="p-2 rounded-xl transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-red-200"
+              className="p-2 rounded-lg transition-all duration-200 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-1"
               style={{
-                backgroundColor: deleting ? 'rgba(191, 9, 47, 0.1)' : 'rgba(191, 9, 47, 0.05)',
                 color: '#BF092F'
               }}
               disabled={deleting}
@@ -180,18 +167,18 @@ export function Card({ title, link, contentId, onDelete, type: providedType }: C
           </div>
         </div>
 
-        <h3 className="font-bold text-lg mb-4 line-clamp-2 leading-tight" 
-            style={{color: '#132440'}} 
+        {/* Title */}
+        <h3 className="font-semibold text-base sm:text-lg mb-4 line-clamp-2 leading-tight text-gray-900" 
             title={title}>
           {title}
         </h3>
 
-        <div className="flex-grow overflow-hidden rounded-xl" 
-             style={{backgroundColor: 'rgba(248, 250, 252, 0.5)'}}>
+        {/* Content */}
+        <div className="flex-grow overflow-hidden rounded-lg bg-gray-50 mb-4">
           {contentType === "youtube" && (
-            <div className="relative h-48 md:h-56">
+            <div className="relative h-40 sm:h-48">
               <iframe
-                className="w-full h-full rounded-xl"
+                className="w-full h-full rounded-lg"
                 src={getYoutubeEmbedLink(link)}
                 title={`YouTube video: ${title}`}
                 frameBorder="0"
@@ -203,7 +190,7 @@ export function Card({ title, link, contentId, onDelete, type: providedType }: C
           )}
 
           {contentType === "twitter" && (
-            <div className="overflow-hidden h-48 md:h-56 flex items-center justify-center p-4">
+            <div className="overflow-hidden h-40 sm:h-48 flex items-center justify-center p-4">
               <blockquote className="twitter-tweet">
                 <a href={link.replace("x.com", "twitter.com")}></a>
               </blockquote>
@@ -211,7 +198,7 @@ export function Card({ title, link, contentId, onDelete, type: providedType }: C
           )}
 
           {contentType === "instagram" && (
-            <div className="overflow-hidden h-48 md:h-56 flex items-center justify-center p-4">
+            <div className="overflow-hidden h-40 sm:h-48 flex items-center justify-center p-4">
               <blockquote
                 className="instagram-media"
                 data-instgrm-captioned
@@ -235,35 +222,32 @@ export function Card({ title, link, contentId, onDelete, type: providedType }: C
           )}
 
           {contentType === "unknown" && (
-            <div className="flex items-center justify-center h-48 md:h-56 p-6">
+            <div className="flex items-center justify-center h-40 sm:h-48 p-6">
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-                     style={{backgroundColor: 'rgba(19, 36, 64, 0.1)'}}>
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{color: '#132440'}}>
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 bg-gray-100">
+                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.16 6.16a4 4 0 00-5.66 0L6.34 7.34a4 4 0 105.66 5.66l1.06-1.06a4 4 0 000-5.66z" />
                   </svg>
                 </div>
-                <p className="text-sm font-medium" style={{color: '#16476A'}}>
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Unsupported content type
                 </p>
-                <p className="text-xs mt-1" style={{color: '#132440', opacity: 0.7}}>
-                  Please use YouTube, Twitter, or Instagram links
+                <p className="text-xs text-gray-500">
+                  Use YouTube, Twitter, or Instagram links
                 </p>
               </div>
             </div>
           )}
         </div>
 
-        <div className="mt-4 pt-3 border-t" style={{borderColor: 'rgba(19, 36, 64, 0.1)'}}>
+        {/* Footer */}
+        <div className="pt-3 border-t border-gray-100">
           <a 
             href={link} 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="text-sm truncate block transition-colors duration-200 hover:underline"
-            style={{color: '#3B9797'}}
+            className="text-xs sm:text-sm text-gray-500 hover:text-teal-600 transition-colors duration-200 block truncate"
             title={link}
-            onMouseEnter={(e) => e.currentTarget.style.color = '#2A7A7A'}
-            onMouseLeave={(e) => e.currentTarget.style.color = '#3B9797'}
           >
             {link}
           </a>

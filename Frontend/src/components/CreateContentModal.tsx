@@ -113,34 +113,27 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm"></div>
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
 
-      <div className="relative w-full max-w-md animate-fade-in">
+      <div className="relative w-full max-w-md animate-subtle-fade-in">
         <div
           ref={ref}
-          className="glass-effect rounded-3xl p-6 md:p-8 w-full"
-          style={{
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.3)'
-          }}
+          className="bg-white rounded-2xl p-6 sm:p-8 w-full shadow-xl border border-gray-200"
         >
+          {/* Header */}
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold" style={{color: '#132440'}}>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
               Add New Content
             </h2>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-red-200"
-              style={{
-                backgroundColor: 'rgba(191, 9, 47, 0.1)',
-                color: '#BF092F'
-              }}
+              className="p-2 rounded-lg transition-all duration-200 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-200 text-red-600"
             >
               <CrossIcon />
             </button>
           </div>
 
+          {/* Form */}
           <div className="space-y-5">
             <Input 
               reference={titleRef} 
@@ -156,11 +149,12 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
             />
           </div>
 
+          {/* Content Type Selection */}
           <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-4" style={{color: '#132440'}}>
+            <h3 className="text-base sm:text-lg font-semibold mb-4 text-gray-900">
               Content Type
             </h3>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               <Button
                 text="YouTube"
                 variant={type === ContentType.Youtube ? "primary" : "secondary"}
@@ -182,7 +176,8 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
             </div>
           </div>
 
-          <div className="flex gap-3 mt-8">
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-3 mt-8">
             <Button
               onClick={onClose}
               size="md"

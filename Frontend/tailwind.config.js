@@ -27,23 +27,23 @@ export default {
         }
       },
       animation: {
-        'fade-in': 'fadeIn 0.6s ease-out',
-        'slide-in': 'slideIn 0.3s ease-out',
-        'pulse-ring': 'pulse-ring 1s ease-out infinite',
+        'subtle-fade-in': 'subtleFadeIn 0.4s ease-out',
+        'gentle-slide-in': 'gentleSlideIn 0.3s ease-out',
+        'soft-scale': 'softScale 0.2s ease-out',
         'shake': 'shake 0.5s ease-in-out',
       },
       keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
+        subtleFadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-        slideIn: {
-          '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(0)' },
+        gentleSlideIn: {
+          '0%': { opacity: '0', transform: 'translateX(-12px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
         },
-        'pulse-ring': {
-          '0%': { transform: 'scale(0.95)', opacity: '1' },
-          '100%': { transform: 'scale(1.05)', opacity: '0' },
+        softScale: {
+          '0%': { opacity: '0', transform: 'scale(0.98)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
         },
         shake: {
           '0%, 100%': { transform: 'translateX(0)' },
@@ -55,9 +55,16 @@ export default {
         xs: '2px',
       },
       boxShadow: {
-        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        'premium': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'premium-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        'premium-focus': '0 0 0 3px rgba(59, 151, 151, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+      },
+      fontSize: {
+        '2xs': ['0.625rem', { lineHeight: '0.75rem' }],
       },
     },
   },
