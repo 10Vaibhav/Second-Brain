@@ -24,8 +24,6 @@ rm -rf dist
 
 npm run build
 
-# Force cache clearing by touching all JS and CSS files
-find dist -name "*.js" -o -name "*.css" | xargs touch
 
 pm2 stop brainly-frontend || true
 pm2 delete brainly-frontend || true
