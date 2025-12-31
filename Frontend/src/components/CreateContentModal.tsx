@@ -22,6 +22,7 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
   const linkRef = useRef<HTMLInputElement>(null);
   const [type, setType] = useState(ContentType.Youtube);
   const [link, setLink] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const detectContentType = (url: string): ContentType => {
     const lowerCaseUrl = url.toLowerCase();
@@ -34,16 +35,13 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
       return ContentType.Instagram;
     }
     
-    // Default to YouTube if no match
     return ContentType.Youtube;
   };
 
-  // Update content type whenever link changes
   useEffect(() => {
     if (open && linkRef.current) {
       linkRef.current.addEventListener('input', handleLinkChange);
       
-      // Clean up event listener on unmount or modal close
       return () => {
         if (linkRef.current) {
           linkRef.current.removeEventListener('input', handleLinkChange);
@@ -52,7 +50,6 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
     }
   }, [open]);
 
-  // Detect content type when link changes
   useEffect(() => {
     if (link) {
       const detectedType = detectContentType(link);
@@ -60,7 +57,6 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
     }
   }, [link]);
 
-  // Handle link input change
   const handleLinkChange = () => {
     if (linkRef.current) {
       const currentLink = linkRef.current.value || "";
@@ -68,7 +64,6 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
     }
   };
 
-  // Handle manual content type selection
   const handleTypeChange = (selectedType: ContentType) => {
     setType(selectedType);
   };
@@ -77,98 +72,135 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
     const title = titleRef.current?.value;
     const currentLink = linkRef.current?.value;
 
-    await axios.post(
-      `${BACKEND_URL}/api/v1/content`,
-      {
-        link: currentLink,
-        title,
-        type,
-      },
-      {
-        headers: {
-          authorization: localStorage.getItem("token"),
-        },
-      }
-    );
+    if (!title || !currentLink) {
+      return;
+    }
 
-    onClose();
+    setIsLoading(true);
+
+    try {
+      await axios.post(
+        `${BACKEND_URL}/api/v1/content`,
+        {
+          link: currentLink,
+          title,
+          type,
+        },
+        {
+          headers: {
+            authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+
+      onClose();
+      
+      if (titleRef.current) titleRef.current.value = "";
+      if (linkRef.current) linkRef.current.value = "";
+      setLink("");
+      setType(ContentType.Youtube);
+    } catch (error) {
+      console.error("Error adding content:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const ref = useRef<HTMLDivElement>(null);
   useOutsideClick(ref, onClose);
 
+  if (!open) return null;
+
   return (
-    <div>
-      {open && (
-        <div>
-          <div className="w-screen h-screen bg-slate-500 fixed top-0 left-0 opacity-60 flex justify-center z-30"></div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm"></div>
 
-          <div className="w-screen h-screen fixed left-0 top-0 flex justify-center items-center z-40 p-4">
-            <div className="flex flex-col justify-center w-full max-w-xs md:max-w-md">
-              <span
-                ref={ref}
-                className="bg-white opacity-100 p-3 md:p-4 rounded w-full"
-              >
-                <div className="flex justify-end cursor-pointer">
-                  <div onClick={onClose}>
-                    <CrossIcon />
-                  </div>
-                </div>
-                <div className="space-y-2 md:space-y-3">
-                  <Input reference={titleRef} placeholder={"Title"} />
-                  <Input 
-                    reference={linkRef} 
-                    placeholder={"Link"} 
-                  />
-                </div>
+      <div className="relative w-full max-w-md animate-fade-in">
+        <div
+          ref={ref}
+          className="glass-effect rounded-3xl p-6 md:p-8 w-full"
+          style={{
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.3)'
+          }}
+        >
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold" style={{color: '#132440'}}>
+              Add New Content
+            </h2>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-red-200"
+              style={{
+                backgroundColor: 'rgba(191, 9, 47, 0.1)',
+                color: '#BF092F'
+              }}
+            >
+              <CrossIcon />
+            </button>
+          </div>
 
-                <div className="mt-3 md:mt-4">
-                  <h1 className="text-sm md:text-base font-medium ml-1">
-                    Detected Content Type
-                  </h1>
-                  <div className="flex gap-2 p-2 md:p-4 justify-center">
-                    <Button
-                      text="YouTube"
-                      variant={
-                        type === ContentType.Youtube ? "primary" : "secondary"
-                      }
-                      size="sm"
-                      onClick={() => handleTypeChange(ContentType.Youtube)}
-                    />
+          <div className="space-y-5">
+            <Input 
+              reference={titleRef} 
+              placeholder="Enter content title"
+              label="Title"
+              helperText="Give your content a descriptive title"
+            />
+            <Input 
+              reference={linkRef} 
+              placeholder="Paste your link here"
+              label="Link"
+              helperText="YouTube, Twitter, or Instagram URL"
+            />
+          </div>
 
-                    <Button
-                      text="Twitter"
-                      variant={
-                        type === ContentType.Twitter ? "primary" : "secondary"
-                      }
-                      size="sm"
-                      onClick={() => handleTypeChange(ContentType.Twitter)}
-                    />
-
-                    <Button
-                      text="Instagram"
-                      variant={
-                        type === ContentType.Instagram ? "primary" : "secondary"
-                      }
-                      size="sm"
-                      onClick={() => handleTypeChange(ContentType.Instagram)}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-center mt-3 md:mt-4">
-                  <Button
-                    onClick={addContent}
-                    size={"sm"}
-                    variant={"primary"}
-                    text={"Submit"}
-                  />
-                </div>
-              </span>
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-4" style={{color: '#132440'}}>
+              Content Type
+            </h3>
+            <div className="grid grid-cols-3 gap-3">
+              <Button
+                text="YouTube"
+                variant={type === ContentType.Youtube ? "primary" : "secondary"}
+                size="sm"
+                onClick={() => handleTypeChange(ContentType.Youtube)}
+              />
+              <Button
+                text="Twitter"
+                variant={type === ContentType.Twitter ? "primary" : "secondary"}
+                size="sm"
+                onClick={() => handleTypeChange(ContentType.Twitter)}
+              />
+              <Button
+                text="Instagram"
+                variant={type === ContentType.Instagram ? "primary" : "secondary"}
+                size="sm"
+                onClick={() => handleTypeChange(ContentType.Instagram)}
+              />
             </div>
           </div>
+
+          <div className="flex gap-3 mt-8">
+            <Button
+              onClick={onClose}
+              size="md"
+              variant="secondary"
+              text="Cancel"
+              fullWidth={true}
+            />
+            <Button
+              onClick={addContent}
+              size="md"
+              variant="primary"
+              text={isLoading ? "Adding..." : "Add Content"}
+              loading={isLoading}
+              fullWidth={true}
+            />
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

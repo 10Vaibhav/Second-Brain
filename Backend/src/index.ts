@@ -15,32 +15,59 @@ const pass: string = JWT_Password
 
 const app = express();
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Add middleware to log all requests
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`, {
+        body: req.body,
+        contentType: req.headers['content-type'],
+        contentLength: req.headers['content-length']
+    });
+    next();
+});
 
 const userSchema = z.object({
-    username: z.string().min(1,{message: "Name cannot be empty"}),
-    password: z.string().min(4, {message: "password should be at least 4 letter"}).max(6, {message: "password is not greater than 6 letters."}),
+    username: z.string()
+        .min(3, {message: "Username must be at least 3 characters long"})
+        .regex(/^[a-zA-Z0-9_]+$/, {message: "Username can only contain letters, numbers, and underscores"}),
+    password: z.string()
+        .min(6, {message: "Password must be at least 6 characters long"})
+        .regex(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {message: "Password must contain at least one uppercase letter, one lowercase letter, and one number"}),
 });
 
 type FinalUserSchema = z.infer<typeof userSchema>
 
 app.post("/api/v1/signup", async (req: Request, res: Response) => {
-    const {success} = userSchema.safeParse(req.body);
-    const updateBody: FinalUserSchema = req.body;
-
+    console.log('Signup request received:', {
+        body: req.body,
+        headers: req.headers['content-type'],
+        contentLength: req.headers['content-length']
+    });
+    
+    const validation = userSchema.safeParse(req.body);
+    
     try{
-
-        if(!success){
-            res.status(411).json({
-                message: "something wrong in SignUp Route!!",
-            })
-
+        if(!validation.success){
+            console.log('Validation failed:', validation.error.errors);
+            const errors = validation.error.errors.map(err => ({
+                field: err.path[0],
+                message: err.message
+            }));
+            
+            res.status(400).json({
+                message: "Validation failed",
+                errors: errors
+            });
             return;
         }
 
+        const updateBody: FinalUserSchema = validation.data;
         const saltRounds = 10;
 
+        console.log('Creating user with username:', updateBody.username);
         const hashedPassword = await bcrypt.hash(updateBody.password, saltRounds);
 
         await UserModel.create({
@@ -48,16 +75,17 @@ app.post("/api/v1/signup", async (req: Request, res: Response) => {
             password: hashedPassword,
         });
 
+        console.log('User created successfully');
         res.status(200).json({
             message: "User Signed Up !!"
         });
 
     }catch(error){
+        console.log('Signup error:', error);
         res.status(409).json({
-            message : `user already exist`
+            message : `User already exists`
         })
     }
-
 });
 
 app.post("/api/v1/signin", async (req: Request, res: Response) => {
@@ -149,7 +177,7 @@ app.delete("/api/v1/content",userMiddleWare,async (req: Request, res: Response) 
     const contentId = req.body.contentId;
 
     try{
-        const result = await ContentModel.deleteOne({
+        await ContentModel.deleteOne({
             _id: contentId,
             userId: req.userId
         });

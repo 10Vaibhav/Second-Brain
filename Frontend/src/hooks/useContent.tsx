@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../config";
 
-// Define the content item type
 export interface ContentItem {
     _id: string;
     title: string;
@@ -13,21 +12,31 @@ export interface ContentItem {
   }
 
 export function useContent() {
-  // Specify the array type
   const [contents, setContents] = useState<ContentItem[]>([]);
 
   async function refresh() {
-    axios.get(`${BACKEND_URL}/api/v1/content`, {
-      headers: {
-        "authorization": localStorage.getItem("token")
-      }
-    })
-    .then((response) => {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+      window.location.href = "/signin";
+      return;
+    }
+
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/v1/content`, {
+        headers: {
+          "authorization": token
+        }
+      });
       setContents(response.data.content);
-    })
-    .catch(error => {
+    } catch (error: any) {
       console.error("Error fetching content:", error);
-    });
+      
+      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+        localStorage.removeItem("token");
+        window.location.href = "/signin";
+      }
+    }
   }
 
   useEffect(() => {
@@ -35,7 +44,7 @@ export function useContent() {
 
     const interval = setInterval(() => {
       refresh();
-    }, 4 * 1000);
+    }, 10 * 1000);
 
     return () => {
       clearInterval(interval);

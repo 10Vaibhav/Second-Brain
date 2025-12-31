@@ -15,9 +15,9 @@ const ShareButton = ({ text }: ShareButtonProps) => {
   const [shareNow, setShareNow] = useState(false);
   const message = encodeURIComponent(text);
 
-  // Social media share handlers
   const handleWhatsAppShare = () => {
     window.open(`https://wa.me/?text=${message}`, "_blank");
+    setShareNow(false);
   };
 
   const handleMessengerShare = () => {
@@ -25,10 +25,12 @@ const ShareButton = ({ text }: ShareButtonProps) => {
       `fb-messenger://share/?link=${message}`,
       "_blank"
     );
+    setShareNow(false);
   };
 
   const handleTwitterShare = () => {
     window.open(`https://twitter.com/intent/tweet?text=${message}`, "_blank");
+    setShareNow(false);
   };
 
   const handleLinkedInShare = () => {
@@ -36,62 +38,79 @@ const ShareButton = ({ text }: ShareButtonProps) => {
       `https://www.linkedin.com/sharing/share-offsite/?url=${message}`,
       "_blank"
     );
+    setShareNow(false);
   };
 
   return (
     <div className="relative">
-      {/* Main Share Button */}
       <button
-        className="px-3 py-2 cursor-pointer text-white rounded-md flex items-center gap-2 bg-purple-600 hover:bg-purple-700 transition-colors text-sm"
+        className="p-2 rounded-xl transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-teal-200"
+        style={{
+          backgroundColor: 'rgba(59, 151, 151, 0.1)',
+          color: '#3B9797'
+        }}
         onClick={() => setShareNow(!shareNow)}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(59, 151, 151, 0.15)'}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(59, 151, 151, 0.1)'}
       >
-        <span className="whitespace-nowrap">
-          Share{!shareNow && <span className="ml-1">Now</span>}
-        </span>
         <FaShare className="w-4 h-4" />
       </button>
 
-      {/* Share Options Section */}
       {shareNow && (
-        <section className="absolute z-50 left-0 mt-2 w-40">
-          <div className="flex flex-col items-center justify-center bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-2">
-            <h1 className="text-md font-semibold text-gray-100 mb-2">Share this content</h1>
-            <div className="flex flex-col space-y-2 py-1">
+        <div className="absolute z-50 right-0 mt-2 w-48 animate-fade-in">
+          <div className="glass-effect rounded-2xl p-4 shadow-2xl"
+               style={{
+                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%)',
+                 backdropFilter: 'blur(20px)',
+                 border: '1px solid rgba(255, 255, 255, 0.3)'
+               }}>
+            <h3 className="text-sm font-semibold mb-3 text-center" style={{color: '#132440'}}>
+              Share Content
+            </h3>
+            <div className="space-y-2">
               <button
                 onClick={handleWhatsAppShare}
-                className="flex items-center cursor-pointer justify-start gap-3 p-2.5 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors w-full"
-                title="Share on WhatsApp"
+                className="flex items-center justify-start gap-3 p-2.5 rounded-xl hover:scale-[1.02] transition-all duration-200 w-full text-white font-medium"
+                style={{backgroundColor: '#25D366'}}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1DA851'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#25D366'}
               >
-                <FaWhatsapp className="w-5 h-5" />
+                <FaWhatsapp className="w-4 h-4" />
                 <span className="text-sm">WhatsApp</span>
               </button>
               <button
                 onClick={handleMessengerShare}
-                className="flex items-center cursor-pointer justify-start gap-3 p-2.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors w-full"
-                title="Share on Messenger"
+                className="flex items-center justify-start gap-3 p-2.5 rounded-xl hover:scale-[1.02] transition-all duration-200 w-full text-white font-medium"
+                style={{backgroundColor: '#0084FF'}}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0066CC'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0084FF'}
               >
-                <FaFacebookMessenger className="w-5 h-5" />
+                <FaFacebookMessenger className="w-4 h-4" />
                 <span className="text-sm">Messenger</span>
               </button>
               <button
                 onClick={handleTwitterShare}
-                className="flex items-center cursor-pointer justify-start gap-3 p-2.5 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition-colors w-full"
-                title="Share on Twitter"
+                className="flex items-center justify-start gap-3 p-2.5 rounded-xl hover:scale-[1.02] transition-all duration-200 w-full text-white font-medium"
+                style={{backgroundColor: '#1DA1F2'}}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1A91DA'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1DA1F2'}
               >
-                <FaTwitter className="w-5 h-5" />
+                <FaTwitter className="w-4 h-4" />
                 <span className="text-sm">Twitter</span>
               </button>
               <button
                 onClick={handleLinkedInShare}
-                className="flex items-center cursor-pointer justify-start gap-3 p-2.5 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition-colors w-full"
-                title="Share on LinkedIn"
+                className="flex items-center justify-start gap-3 p-2.5 rounded-xl hover:scale-[1.02] transition-all duration-200 w-full text-white font-medium"
+                style={{backgroundColor: '#0A66C2'}}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#004182'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0A66C2'}
               >
-                <FaLinkedin className="w-5 h-5" />
+                <FaLinkedin className="w-4 h-4" />
                 <span className="text-sm">LinkedIn</span>
               </button>
             </div>
           </div>
-        </section>
+        </div>
       )}
     </div>
   );
