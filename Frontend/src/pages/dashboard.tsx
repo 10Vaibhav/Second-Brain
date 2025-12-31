@@ -58,7 +58,7 @@ export function Dashboard() {
                 }
               });
 
-              const shareUrl = `http://localhost:5173/share/${response.data.hash}`
+              const shareUrl = `https://brainly.vaibhavm.tech/share/${response.data.hash}`
 
               alert("Share link copied !!");
               navigator.clipboard.writeText(shareUrl);

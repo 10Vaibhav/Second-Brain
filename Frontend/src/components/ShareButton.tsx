@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   FaWhatsapp,
   FaFacebookMessenger,
@@ -7,7 +7,11 @@ import {
   FaShare,
 } from "react-icons/fa";
 
-const ShareButton = ({ text }) => {
+interface ShareButtonProps {
+  text: string;
+}
+
+const ShareButton = ({ text }: ShareButtonProps) => {
   const [shareNow, setShareNow] = useState(false);
   const message = encodeURIComponent(text);
 
