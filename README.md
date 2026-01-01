@@ -10,36 +10,6 @@ A full-stack web application that helps users organize and manage content from v
 - **Content Filtering**: Filter content based on source type (Twitter, YouTube, Instagram, etc.)
 - **Share Functionality**: Share your Second Brain collection with others
 
-## Screenshots
-
-### Authentication Pages
-
-#### Signup Page
-![Signup Page](./OutputImages/Create%20Account.png)
-*Create a new account with username and password*
-
-#### Login Page
-![Login Page](./OutputImages/Sign%20In.png)
-*Sign in to your existing account*
-
-### Content Management
-
-#### All Contents Dashboard
-![All Contents](./OutputImages/dashboard_new.png)
-*View all your saved content across platforms*
-
-#### Filter Contents View
-![Twitter Contents](./OutputImages/Filtered%20Content%20.png)
-*Filter and view Twitter-specific content*
-
-#### Share Content
-![Add Content Modal](./OutputImages/share%20button%20option.png)
-*Share the generated content via whatsapp, messenger, twitter, linkedin*
-
-#### Adding New Content
-![Add Content Modal](./OutputImages/AddContent.png)
-*Modal for adding new content with URL and content type selection*
-
 ## Tech Stack
 
 - **Frontend**: React with TypeScript
